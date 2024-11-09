@@ -1,0 +1,52 @@
+#include <TouchButtons.h>
+
+int TouchButtons::latestValueOnA = 0;
+int TouchButtons::latestValueOnB = 0;
+unsigned long TouchButtons::onPressedTimeForA = 0;
+unsigned long TouchButtons::onPressedTimeForB = 0;
+
+void TouchButtons::begin() {
+    pinMode(PIN_BUTTON_A, INPUT);
+    pinMode(PIN_BUTTON_B, INPUT);
+}
+
+void TouchButtons::loop(void(*onTouchButtonEvent)(BUTTON, BUTTON_EVENT)) {
+    unsigned long now = millis();
+    int currentValueOnA = digitalRead(PIN_BUTTON_A);
+    bool longPressedA = false;
+    bool longPressedB = false;
+    if (latestValueOnA == 0 && currentValueOnA == 1) {
+        onPressedTimeForA = now;
+    } else if (latestValueOnA == 1 && currentValueOnA == 0) {
+        unsigned long difference = now - onPressedTimeForA;
+        if (difference >= LONG_PRESS_THRESHOLD) {
+            longPressedA = true;
+            //onTouchButtonEvent(BUTTON::A, BUTTON_EVENT::LONG_PRESSED);
+        } else {
+            onTouchButtonEvent(BUTTON::A, BUTTON_EVENT::PRESSED);
+        }
+    }
+    int currentValueOnB = digitalRead(PIN_BUTTON_B);   
+    if (latestValueOnB == 0 && currentValueOnB == 1) {
+        onPressedTimeForB = now;
+    } else if (latestValueOnB == 1 && currentValueOnB == 0) {
+        unsigned long difference = now - onPressedTimeForB;
+        if (difference >= LONG_PRESS_THRESHOLD) {
+            longPressedB = true;
+            //onTouchButtonEvent(BUTTON::B, BUTTON_EVENT::LONG_PRESSED);
+        } else {
+            onTouchButtonEvent(BUTTON::B, BUTTON_EVENT::PRESSED);
+        }
+    }
+
+    if (longPressedA && longPressedB) {
+        onTouchButtonEvent(BUTTON::A_B, BUTTON_EVENT::LONG_PRESSED);
+    } else if (longPressedA && !longPressedB) {
+        onTouchButtonEvent(BUTTON::A, BUTTON_EVENT::LONG_PRESSED);
+    } else if (!longPressedA && longPressedB) {
+        onTouchButtonEvent(BUTTON::B, BUTTON_EVENT::LONG_PRESSED);
+    }
+
+    latestValueOnA = currentValueOnA;
+    latestValueOnB = currentValueOnB;
+}
