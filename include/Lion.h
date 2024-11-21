@@ -15,6 +15,9 @@ public:
 private:
     Display displayController = Display();
     TouchButtons buttons = TouchButtons();
+
+    void beginDisplay();
+    void beginTouchButtons();
 };
 
 #endif
