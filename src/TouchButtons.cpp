@@ -6,8 +6,11 @@ unsigned long TouchButtons::onPressedTimeForA = 0;
 unsigned long TouchButtons::onPressedTimeForB = 0;
 
 void TouchButtons::begin() {
-    pinMode(PIN_BUTTON_A, INPUT);
-    pinMode(PIN_BUTTON_B, INPUT);
+    pinMode(PIN_BUTTON_A, OUTPUT);
+    pinMode(PIN_BUTTON_B, OUTPUT);
+
+    digitalWrite(PIN_BUTTON_A, LOW);
+    digitalWrite(PIN_BUTTON_B, LOW);
 }
 
 void TouchButtons::loop(void(*onTouchButtonEvent)(BUTTON, BUTTON_EVENT)) {
@@ -21,7 +24,6 @@ void TouchButtons::loop(void(*onTouchButtonEvent)(BUTTON, BUTTON_EVENT)) {
         unsigned long difference = now - onPressedTimeForA;
         if (difference >= LONG_PRESS_THRESHOLD) {
             longPressedA = true;
-            //onTouchButtonEvent(BUTTON::A, BUTTON_EVENT::LONG_PRESSED);
         } else {
             onTouchButtonEvent(BUTTON::A, BUTTON_EVENT::PRESSED);
         }
@@ -33,7 +35,6 @@ void TouchButtons::loop(void(*onTouchButtonEvent)(BUTTON, BUTTON_EVENT)) {
         unsigned long difference = now - onPressedTimeForB;
         if (difference >= LONG_PRESS_THRESHOLD) {
             longPressedB = true;
-            //onTouchButtonEvent(BUTTON::B, BUTTON_EVENT::LONG_PRESSED);
         } else {
             onTouchButtonEvent(BUTTON::B, BUTTON_EVENT::PRESSED);
         }
