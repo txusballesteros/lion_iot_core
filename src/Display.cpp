@@ -79,6 +79,7 @@ void Display::begin() {
         SSD1306.setTextWrap(false);
         SSD1306.setCursor(0, 0);
         SSD1306.display();
+		delay(100);
     }
 }
 

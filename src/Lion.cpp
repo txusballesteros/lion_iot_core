@@ -3,9 +3,9 @@
 Display* Lion::display() {  return &displayController; }
 TouchButtons* Lion::touchButtons() {  return &buttons; }
 
-void Lion::begin() {
+void Lion::begin(int duration) {
   displayController.begin();
   displayController.drawLogo();
   displayController.draw();
-  delay(2000);
+  delay(duration);
 }

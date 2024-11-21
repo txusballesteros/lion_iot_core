@@ -8,7 +8,7 @@
 
 class Lion {
 public:
-    void begin();
+    void begin(int duration = 1500);
     Display* display();
     TouchButtons* touchButtons();
 
