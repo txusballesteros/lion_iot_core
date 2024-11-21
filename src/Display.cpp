@@ -79,18 +79,16 @@ void Display::begin() {
         SSD1306.setTextWrap(false);
         SSD1306.setCursor(0, 0);
         SSD1306.display();
-        delay(2000);
+        delay(1500);
     }
 }
 
 void Display::drawLogo() {
     SSD1306.drawBitmap(0, 0, logo, 128, 64, BLACK, WHITE);
-    SSD1306.display();
 }
 
 void Display::clear() {
     SSD1306.clearDisplay();
-    SSD1306.display();
 }
 
 void Display::setBrightness(int8 value) {
@@ -111,7 +109,6 @@ void Display::writeText(int16_t x, int16_t y, int16_t size, String text) {
     SSD1306.setCursor(x, y);
     SSD1306.setTextSize(size);
     SSD1306.println(text);
-    SSD1306.display();
 }
 
 uint16_t Display::getTextBounds(int16_t *size, String *text) {
@@ -150,12 +147,10 @@ void Display::writeText(int16_t x, int16_t y, int16_t size, char character) {
     SSD1306.setCursor(x, y);
     SSD1306.setTextSize(size);
     SSD1306.print(character);
-    SSD1306.display();
 }
 
 void Display::drawPixel(int16_t x, int16_t y) {
     SSD1306.drawPixel(x, y, WHITE);
-    SSD1306.display();
 }
 
 void Display::drawFile(String filePath, int x, int y, int width, int height) {
@@ -165,7 +160,6 @@ void Display::drawFile(String filePath, int x, int y, int width, int height) {
 
     SSD1306.clearDisplay();
     SSD1306.drawBitmap(x, y, (const uint8_t*)originBuffer, DISPLAY_WIDTH, DISPLAY_HEIGHT, WHITE);
-    SSD1306.display();
 }
 
 void Display::draw() {
