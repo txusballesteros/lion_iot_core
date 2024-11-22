@@ -5,6 +5,8 @@ int TouchButtons::latestValueOnB = 0;
 unsigned long TouchButtons::onPressedTimeForA = 0;
 unsigned long TouchButtons::onPressedTimeForB = 0;
 unsigned long TouchButtons::lastValidationTime = 0;
+TouchButtons::OnTouchButtonEvent TouchButtons::onTouchButtonEvent;
+Debounce TouchButtons::loopDebounce = Debounce(LOOP_PERIOD_MS);
 
 void TouchButtons::begin() {
     pinMode(PIN_BUTTON_A, OUTPUT);
@@ -14,10 +16,9 @@ void TouchButtons::begin() {
     digitalWrite(PIN_BUTTON_B, LOW);
 }
 
-void TouchButtons::loop(void(*onTouchButtonEvent)(BUTTON, BUTTON_EVENT)) {
-    unsigned long now = millis();
-    unsigned long timeDifference = now - lastValidationTime;
-    if (timeDifference >= LOOP_PERIOD_MS) {
+void TouchButtons::onLoopExecution() {
+    if (onTouchButtonEvent) {
+        unsigned long now = millis();
         int currentValueOnA = digitalRead(PIN_BUTTON_A);
         bool longPressedA = false;
         bool longPressedB = false;
@@ -43,9 +44,7 @@ void TouchButtons::loop(void(*onTouchButtonEvent)(BUTTON, BUTTON_EVENT)) {
             }
         }
 
-        if (longPressedA && longPressedB) {
-            onTouchButtonEvent(BUTTON::A_B, BUTTON_EVENT::LONG_PRESSED);
-        } else if (longPressedA && !longPressedB) {
+        if (longPressedA && !longPressedB) {
             onTouchButtonEvent(BUTTON::A, BUTTON_EVENT::LONG_PRESSED);
         } else if (!longPressedA && longPressedB) {
             onTouchButtonEvent(BUTTON::B, BUTTON_EVENT::LONG_PRESSED);
@@ -53,6 +52,10 @@ void TouchButtons::loop(void(*onTouchButtonEvent)(BUTTON, BUTTON_EVENT)) {
         
         latestValueOnA = currentValueOnA;
         latestValueOnB = currentValueOnB;
-        lastValidationTime = now;
-    }    
+    }
+}
+
+void TouchButtons::loop(OnTouchButtonEvent callback) {
+    onTouchButtonEvent = callback;
+    loopDebounce.execute(onLoopExecution);    
 }

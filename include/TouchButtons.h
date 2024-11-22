@@ -2,16 +2,18 @@
 #define TouchButtons_h
 
 #include <Arduino.h>
+#include <Debounce.h>
 
 #define PIN_BUTTON_A D0
 #define PIN_BUTTON_B D3
 
 class TouchButtons {
     public:
-        enum BUTTON { A, B, A_B };
+        enum BUTTON { A, B };
         enum BUTTON_EVENT { PRESSED, LONG_PRESSED };
+        typedef void(*OnTouchButtonEvent)(BUTTON, BUTTON_EVENT);
         static void begin();
-        static void loop(void(*onTouchButtonEvent)(BUTTON, BUTTON_EVENT));
+        static void loop(OnTouchButtonEvent callback);
 
     private:
         static const unsigned int LOOP_PERIOD_MS = 100;
@@ -21,6 +23,9 @@ class TouchButtons {
         static unsigned long onPressedTimeForB;
         static int latestValueOnA;
         static int latestValueOnB;
+        static Debounce loopDebounce;
+        static void onLoopExecution();
+        static OnTouchButtonEvent onTouchButtonEvent;
 };
 
 extern TouchButtons Buttons; 
