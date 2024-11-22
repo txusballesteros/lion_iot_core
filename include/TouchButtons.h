@@ -5,7 +5,6 @@
 
 #define PIN_BUTTON_A D0
 #define PIN_BUTTON_B D3
-#define LONG_PRESS_THRESHOLD 1000
 
 class TouchButtons {
     public:
@@ -15,6 +14,9 @@ class TouchButtons {
         static void loop(void(*onTouchButtonEvent)(BUTTON, BUTTON_EVENT));
 
     private:
+        static const unsigned int LOOP_PERIOD_MS = 100;
+        static const unsigned int LONG_PRESS_THRESHOLD = 1500;
+        static unsigned long lastValidationTime;
         static unsigned long onPressedTimeForA;
         static unsigned long onPressedTimeForB;
         static int latestValueOnA;

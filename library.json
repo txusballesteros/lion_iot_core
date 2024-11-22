@@ -1,6 +1,6 @@
 {
     "name": "Lion IoT Core",
-    "version": "1.5.0",
+    "version": "1.5.1",
     "description": "Lion IoT Core library. Use this library to get access to default configuration.",
     "keywords": "lion, iot",
     "repository": {
